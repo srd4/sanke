@@ -273,16 +273,12 @@
                 processing.state = processing.onTic(processing.state);
             };
 
-
-            // Esta función se ejecuta cada vez que presionamos una tecla. 
-            // No cambie esta función. Su código debe ir en onKeyEvent
             processing.keyPressed = function () {
                 processing.state = processing.onKeyEvent(processing.state, processing.keyCode);
             }
         }
         var canvas = document.getElementById("canvas");
 
-        // Adjuntamos nuestro sketch al framework de processing
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
 </body>
