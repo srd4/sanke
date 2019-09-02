@@ -167,6 +167,8 @@
                             return world
                         }
                         else {
+                            //para evitar el error de morir, se agrega movimiento de un cuadro al pulsar la tecla
+                            //en lugar de solo cambiar direccion 
                             if ((gotFood(world))) {
                                 return make(world, {
                                     snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }), world.snake),
