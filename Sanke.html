@@ -70,7 +70,6 @@
 
         //retorna true si la posicion de la cabeza es igual a la de la comid
         function gotFood(world) {
-            console.log(world.snake)
             if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
                 return make(world, { snake: growSnake(world), foodPos: { x: random(), y: random() } })
             }
