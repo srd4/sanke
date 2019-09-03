@@ -60,7 +60,7 @@
             }
         }
 
-        //if world.pause = true, returns same world over and over (pauses).
+        //if world.pause == true, returns same world over and over (pauses).
         function pause(world) {
             if (world.pause == true) {
                 return world
@@ -69,71 +69,47 @@
 
         //retorna true si la posicion de la cabeza es igual a la de la comida
         function gotFood(world) {
-            return (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y);
+            console.log(world.snake)
+            if(world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y){
+                return make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }})
+            }
+            return world
         }
+
+        function growSnake(world){
+            //adds one square behind the last of the snake.
+            if(world.snake[world.snake.length - 2].x > world.snake[world.snake.length - 1].x){
+                return append(world.snake, {x : world.snake[world.snake.length - 1].x -1})
+            }
+            if(world.snake[world.snake.length - 2].x < world.snake[world.snake.length - 1].x){
+                return append(world.snake, {x : world.snake[world.snake.length - 1].x + 1})
+            }
+            if(world.snake[world.snake.length - 2].y < world.snake[world.snake.length - 1].y){
+                return append(world.snake, {x:world.snake[world.snake.length - 1].y + 1})
+            }
+            if(world.snake[world.snake.length - 2].y > world.snake[world.snake.length - 1].y){
+                return append(world.snake, {x:world.snake[world.snake.length - 1].y - 1})
+            }
+            }
 
         function movement(world) {
             switch (world.direction) {
                 case "up":
-                    if ((gotFood(world))) {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }), world.snake),
-                            foodPos: { x: random(), y: random() },
-                        });
-                        break;
-                    }
-                    else {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }),
-                                listMinOne(world.snake))
-                        });
-                        break;
-                    }
+                    return make(world,
+                        {snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }),listMinOne(world.snake))});
+                    break;
                 case "down":
-                    if ((gotFood(world))) {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), world.snake),
-                            foodPos: { x: random(), y: random() },
-                        });
-                        break;
-                    }
-                    else {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }),
-                                listMinOne(world.snake))
-                        });
-                        break;
-                    }
+                    return make(world,
+                    {snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), listMinOne(world.snake))});
+                    break;
                 case "left":
-                    if ((gotFood(world))) {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }), world.snake),
-                            foodPos: { x: random(), y: random() },
-                        });
-                        break;
-                    }
-                    else {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }),
-                                listMinOne(world.snake))
-                        });
-                        break;
-                    }
+                    return make(world, {
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }),listMinOne(world.snake))});
+                    break;
                 case "right":
-                    if ((gotFood(world))) {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }), world.snake),
-                            foodPos: { x: random(), y: random() },
-                        });
-                        break;
-                    }
-                    else {
-                        return make(world, {
-                            snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }),
-                                listMinOne(world.snake))
-                        });
-                        break;
-                    }
+                    return make(world, {
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }),listMinOne(world.snake))});
+                    break;
                 default:
                     return make(world, {});
             }
@@ -149,16 +125,22 @@
         function sketchProc(processing) {
 
             processing.setup = function () {
-                processing.frameRate(7);
+                processing.frameRate(20);
                 processing.size(40 * 20, 25 * 20);
                 processing.background(0, 0, 0);
                 processing.state = {
                     direction: "right", foodPos: { x: random(), y: random() },
-                    snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }, { x: 0, y: 1 }],
-                    pause: false, score: 0, gameover: false
+                    snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
+                    pause: false,
+                    score: 0,
+                    gameover: false
                 }
             }
-            ///////
+
+            
+
+            //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction:
+      
             //funcion que recibe teclas como entrada
             processing.onKeyEvent = function (world, keyCode) {
                 switch (keyCode) {
@@ -167,24 +149,7 @@
                             return world
                         }
                         else {
-                            //para evitar el error de morir, se agrega movimiento de un cuadro al pulsar la tecla
-                            //en lugar de solo cambiar direccion 
-                            if ((gotFood(world))) {
-                                return make(world, {
-                                    snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }), world.snake),
-                                    foodPos: { x: random(), y: random() },
-                                    direction: "up"
-                                });
-                                break;
-                            }
-                            else {
-                                return make(world, {
-                                    snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }),
-                                        listMinOne(world.snake)),
-                                    direction: "up"
-                                });
-                                break;
-                            }
+                            return make(world, { direction: "up" });
                         }
                     case processing.DOWN:
                         if (world.direction == "up") {
@@ -222,7 +187,9 @@
                 }
             }
 
-            //funcion que se repite varias veces
+
+
+            //executes itself in every f
             processing.onTic = function (world) {
                 if (inList(world.snake[0], rest(world.snake))) {
                     return make(world, { gameover: true });
@@ -237,10 +204,9 @@
                 /*ateSelf(world);
                 outTheMap(world);  //estas funciones estan definidas arriba pero al llamarse, no funcionan
                 pause(world);*/
-                return movement(world);
+                return gotFood(movement(world));
             }
 
-            //funcion que dibuja cuadrados segun el largo de la serpiente, pinta la sepiente
             function snakeLength(list) {
                 if (length(list) == 1) {
                     processing.rect(first(list).x * 20, first(list).y * 20, 20, 20)
