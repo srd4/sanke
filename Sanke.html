@@ -70,6 +70,7 @@
 
         //retorna true si la posicion de la cabeza es igual a la de la comid
         function gotFood(world) {
+
             if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
                 return make(world, { snake: growSnake(world), foodPos: { x: random(), y: random() } })
             }
@@ -130,6 +131,7 @@
                     direction: "right", foodPos: { x: random(), y: random() },
                     snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
                     pause: false,
+                    playing: false
                     gameover: false
                 }
                 const body = processing.loadImage("images/snake.jpg")
@@ -203,10 +205,15 @@
                 if (world.pause == true) {
                     return world
                 }
+                if (!world.playing) {
+                    return world
+                }
                 /*ateSelf(world);
                 outTheMap(world);  //estas funciones estan definidas arriba pero al llamarse, no funcionan
                 pause(world);*/
                 return gotFood(movement(world));
+
+
             }
 
             /**
@@ -245,6 +252,7 @@
                         break;
                 }
             }
+
             //funcion que pinta el juego
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
@@ -262,6 +270,10 @@
                     processing.textFont(processing.PFont, 50);
                     processing.text("PAUSED", 105, 210);
                 }
+                if (world.playing == false) {
+                    processing.textFont(processing.PFont, 50);
+                    processing.text("Clic to start", 240, 240);
+                }
                 processing.textFont(processing.PFont, 20);
                 processing.text("SCORE: " + (length(world.snake) - 3), 20, 390);
             }
@@ -271,8 +283,27 @@
                 processing.state = processing.onTic(processing.state);
             };
 
+            /**
+            * change the playing state from false to true after a click
+            @returns 
+            @param {object} world
+            @param {object} click
+            @example make(world, { playing: true })
+            */
+            processing.onMouseEvent = function (world, event) {
+                if (event.action === 'click') {
+                    return make(world, { playing: true })
+                }
+                return world
+            }
+
             processing.keyPressed = function () {
                 processing.state = processing.onKeyEvent(processing.state, processing.keyCode);
+            }
+
+            processing.mouseClicked = function () {
+                processing.state = processing.onMouseEvent(processing.state,
+                    { action: "click" });
             }
         }
         var canvas = document.getElementById("canvas");
