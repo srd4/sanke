@@ -207,13 +207,13 @@
                 return gotFood(movement(world));
             }
 
-            function snakeLength(list) {
+            function drawSnake(list) {
                 if (length(list) == 1) {
                     processing.rect(first(list).x * 20, first(list).y * 20, 20, 20)
                 }
                 else {
                     processing.rect(first(list).x * 20, first(list).y * 20, 20, 20)
-                    snakeLength(rest(list))
+                    drawSnake(rest(list))
                 }
             }
             
