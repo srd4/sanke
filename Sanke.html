@@ -12,6 +12,7 @@
     <script>
         let { append, cons, first, isEmpty, isList, length, rest } = functionalLight;
 
+        const size = 20
         //crea un objeto nuevo a partir de un objeto y un atributo
         function make(data, attribute) {
             return Object.assign({}, data, attribute);
@@ -70,45 +71,48 @@
         //retorna true si la posicion de la cabeza es igual a la de la comid
         function gotFood(world) {
             console.log(world.snake)
-            if(world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y){
-                return make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }})
+            if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
+                return make(world, { snake: growSnake(world), foodPos: { x: random(), y: random() } })
             }
             return world
         }
 
-        function growSnake(world){
+        function growSnake(world) {
             //adds one square behind the last of the snake.
-            if(world.snake[world.snake.length - 2].x > world.snake[world.snake.length - 1].x){
-                return append(world.snake, {x : world.snake[world.snake.length - 1].x -1})
+            const len = length(world.snake)
+            if (world.snake[len - 2].x > world.snake[len - 1].x) {
+                return append(world.snake, { x: world.snake[len - 1].x - 1, y: world.snake[len - 1].y })
             }
-            if(world.snake[world.snake.length - 2].x < world.snake[world.snake.length - 1].x){
-                return append(world.snake, {x : world.snake[world.snake.length - 1].x + 1})
+            if (world.snake[len - 2].x < world.snake[len - 1].x) {
+                return append(world.snake, { x: world.snake[len - 1].x + 1, y: world.snake[len - 1].y })
             }
-            if(world.snake[world.snake.length - 2].y < world.snake[world.snake.length - 1].y){
-                return append(world.snake, {x:world.snake[world.snake.length - 1].y + 1})
+            if (world.snake[len - 2].y < world.snake[len - 1].y) {
+                return append(world.snake, { y: world.snake[len - 1].y + 1, x: world.snake[len - 1].x })
             }
-            if(world.snake[world.snake.length - 2].y > world.snake[world.snake.length - 1].y){
-                return append(world.snake, {x:world.snake[world.snake.length - 1].y - 1})
+            if (world.snake[len - 2].y > world.snake[len - 1].y) {
+                return append(world.snake, { y: world.snake[len - 1].y - 1, x: world.snake[len - 1].x })
             }
-            }
+        }
 
         function movement(world) {
             switch (world.direction) {
                 case "up":
                     return make(world,
-                        {snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }),listMinOne(world.snake))});
+                        { snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }), listMinOne(world.snake)) });
                     break;
                 case "down":
                     return make(world,
-                    {snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), listMinOne(world.snake))});
+                        { snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), listMinOne(world.snake)) });
                     break;
                 case "left":
                     return make(world, {
-                        snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }),listMinOne(world.snake))});
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }), listMinOne(world.snake))
+                    });
                     break;
                 case "right":
                     return make(world, {
-                        snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }),listMinOne(world.snake))});
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }), listMinOne(world.snake))
+                    });
                     break;
                 default:
                     return make(world, {});
@@ -120,8 +124,8 @@
         function sketchProc(processing) {
 
             processing.setup = function () {
-                processing.frameRate(20);
-                processing.size(40 * 20, 25 * 20);
+                processing.frameRate(15);
+                processing.size(40 * size, 25 * size);
                 processing.background(0, 0, 0);
                 processing.state = {
                     direction: "right", foodPos: { x: random(), y: random() },
@@ -130,12 +134,17 @@
                     score: 0,
                     gameover: false
                 }
+                body = processing.loadImage("images/snake.jpg")
+                headDown = processing.loadImage("images/headDown.jpg")
+                headRight = processing.loadImage("images/headRight.jpg")
+                headUp = processing.loadImage("images/headUp.jpg")
+                headleft = processing.loadImage("images/headLeft.jpg")
             }
 
-            
+
 
             //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction:
-      
+
             //funcion que recibe teclas como entrada
             processing.onKeyEvent = function (world, keyCode) {
                 switch (keyCode) {
@@ -186,6 +195,7 @@
 
             //executes itself in every f
             processing.onTic = function (world) {
+                console.log(world.snake)
                 if (inList(world.snake[0], rest(world.snake))) {
                     return make(world, { gameover: true });
                 }
@@ -202,23 +212,50 @@
                 return gotFood(movement(world));
             }
 
-            function drawSnake(list) {
+            /**
+             * Executes de function 'image' from processing as many times as the list length
+             * @param {list} list
+             * @return {undefined}
+             * */
+            function drawSnakeBody(list) {
                 if (length(list) == 1) {
-                    processing.rect(first(list).x * 20, first(list).y * 20, 20, 20)
+                    processing.image(body, first(list).x * size, first(list).y * size)
                 }
                 else {
-                    processing.rect(first(list).x * 20, first(list).y * 20, 20, 20)
-                    drawSnake(rest(list))
+                    processing.image(body, first(list).x * size, first(list).y * size)
+                    drawSnakeBody(rest(list))
                 }
             }
-            
+
+            /**
+             * Executes de function 'image' from processing to draw an image based on the 'direction' atributte
+             * @param {object} world 
+             * @return {undefined}
+             * */
+            function drawSnakeHead(world) {
+                switch (world.direction) {
+                    case "up":
+                        processing.image(headUp, world.snake[0].x * size, world.snake[0].y * size)
+                        break;
+                    case "down":
+                        processing.image(headDown, world.snake[0].x * size, world.snake[0].y * size)
+                        break;
+                    case "left":
+                        processing.image(headleft, world.snake[0].x * size, world.snake[0].y * size)
+                        break;
+                    case "right":
+                        processing.image(headRight, world.snake[0].x * size, world.snake[0].y * size)
+                        break;
+                }
+            }
             //funcion que pinta el juego
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
                 processing.fill(0, 255, 0)
                 processing.rect(world.foodPos.x * 20, world.foodPos.y * 20, 20, 20)
                 processing.fill(200, 200, 200);
-                drawSnake(world.snake)
+                drawSnakeBody(rest(world.snake))
+                drawSnakeHead(world)
                 processing.fill(255, 0, 0);
                 if (world.gameover == true) {
                     processing.textFont(processing.PFont, 50);
