@@ -70,45 +70,47 @@
         //retorna true si la posicion de la cabeza es igual a la de la comid
         function gotFood(world) {
             console.log(world.snake)
-            if(world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y){
-                return make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }})
+            if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
+                return make(world, { snake: growSnake(world), foodPos: { x: random(), y: random() } })
             }
             return world
         }
 
-        function growSnake(world){
+        function growSnake(world) {
             //adds one square behind the last of the snake.
-            if(world.snake[world.snake.length - 2].x > world.snake[world.snake.length - 1].x){
-                return append(world.snake, {x : world.snake[world.snake.length - 1].x -1})
+            if (world.snake[world.snake.length - 2].x > world.snake[world.snake.length - 1].x) {
+                return append(world.snake, { x: world.snake[world.snake.length - 1].x - 1 })
             }
-            if(world.snake[world.snake.length - 2].x < world.snake[world.snake.length - 1].x){
-                return append(world.snake, {x : world.snake[world.snake.length - 1].x + 1})
+            if (world.snake[world.snake.length - 2].x < world.snake[world.snake.length - 1].x) {
+                return append(world.snake, { x: world.snake[world.snake.length - 1].x + 1 })
             }
-            if(world.snake[world.snake.length - 2].y < world.snake[world.snake.length - 1].y){
-                return append(world.snake, {x:world.snake[world.snake.length - 1].y + 1})
+            if (world.snake[world.snake.length - 2].y < world.snake[world.snake.length - 1].y) {
+                return append(world.snake, { x: world.snake[world.snake.length - 1].y + 1 })
             }
-            if(world.snake[world.snake.length - 2].y > world.snake[world.snake.length - 1].y){
-                return append(world.snake, {x:world.snake[world.snake.length - 1].y - 1})
+            if (world.snake[world.snake.length - 2].y > world.snake[world.snake.length - 1].y) {
+                return append(world.snake, { x: world.snake[world.snake.length - 1].y - 1 })
             }
-            }
+        }
 
         function movement(world) {
             switch (world.direction) {
                 case "up":
                     return make(world,
-                        {snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }),listMinOne(world.snake))});
+                        { snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }), listMinOne(world.snake)) });
                     break;
                 case "down":
                     return make(world,
-                    {snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), listMinOne(world.snake))});
+                        { snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), listMinOne(world.snake)) });
                     break;
                 case "left":
                     return make(world, {
-                        snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }),listMinOne(world.snake))});
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }), listMinOne(world.snake))
+                    });
                     break;
                 case "right":
                     return make(world, {
-                        snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }),listMinOne(world.snake))});
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }), listMinOne(world.snake))
+                    });
                     break;
                 default:
                     return make(world, {});
@@ -128,14 +130,15 @@
                     snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
                     pause: false,
                     score: 0,
-                    gameover: false
+                    gameover: false,
+                    playing: false
                 }
             }
 
-            
+
 
             //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction:
-      
+
             //funcion que recibe teclas como entrada
             processing.onKeyEvent = function (world, keyCode) {
                 switch (keyCode) {
@@ -196,10 +199,15 @@
                 if (world.pause == true) {
                     return world
                 }
+                if (!world.playing) {
+                    return world
+                }
                 /*ateSelf(world);
                 outTheMap(world);  //estas funciones estan definidas arriba pero al llamarse, no funcionan
                 pause(world);*/
                 return gotFood(movement(world));
+
+
             }
 
             function drawSnake(list) {
@@ -211,7 +219,7 @@
                     drawSnake(rest(list))
                 }
             }
-            
+
             //funcion que pinta el juego
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
@@ -228,6 +236,10 @@
                     processing.textFont(processing.PFont, 50);
                     processing.text("PAUSED", 105, 210);
                 }
+                if (world.playing == false) {
+                    processing.textFont(processing.PFont, 50);
+                    processing.text("Clic to start", 240, 240);
+                }
                 processing.textFont(processing.PFont, 20);
                 processing.text("SCORE: " + world.score, 20, 390);
             }
@@ -237,8 +249,27 @@
                 processing.state = processing.onTic(processing.state);
             };
 
+            /**
+            * change the playing state from false to true after a click
+            @returns 
+            @param {object} world
+            @param {object} click
+            @example make(world, { playing: true })
+            */
+            processing.onMouseEvent = function (world, event) {
+                if (event.action === 'click') {
+                    return make(world, { playing: true })
+                }
+                return world
+            }
+
             processing.keyPressed = function () {
                 processing.state = processing.onKeyEvent(processing.state, processing.keyCode);
+            }
+
+            processing.mouseClicked = function () {
+                processing.state = processing.onMouseEvent(processing.state,
+                    { action: "click" });
             }
         }
         var canvas = document.getElementById("canvas");
