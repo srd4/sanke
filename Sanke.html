@@ -131,7 +131,6 @@
                     direction: "right", foodPos: { x: random(), y: random() },
                     snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
                     pause: false,
-                    score: 0,
                     gameover: false
                 }
                 body = processing.loadImage("images/snake.jpg")
@@ -195,7 +194,6 @@
 
             //executes itself in every f
             processing.onTic = function (world) {
-                console.log(world.snake)
                 if (inList(world.snake[0], rest(world.snake))) {
                     return make(world, { gameover: true });
                 }
@@ -266,7 +264,7 @@
                     processing.text("PAUSED", 105, 210);
                 }
                 processing.textFont(processing.PFont, 20);
-                processing.text("SCORE: " + world.score, 20, 390);
+                processing.text("SCORE: " + (length(world.snake) - 3), 20, 390);
             }
 
             processing.draw = function () {
