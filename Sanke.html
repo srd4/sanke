@@ -131,14 +131,14 @@
                     direction: "right", foodPos: { x: random(), y: random() },
                     snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
                     pause: false,
-                    playing: false
+                    playing: false,
                     gameover: false
                 }
-                const body = processing.loadImage("images/snake.jpg")
-                const headDown = processing.loadImage("images/headDown.jpg")
-                const headRight = processing.loadImage("images/headRight.jpg")
-                const headUp = processing.loadImage("images/headUp.jpg")
-                const headleft = processing.loadImage("images/headLeft.jpg")
+                body = processing.loadImage("images/snake.jpg")
+                headDown = processing.loadImage("images/headDown.jpg")
+                headRight = processing.loadImage("images/headRight.jpg")
+                headUp = processing.loadImage("images/headUp.jpg")
+                headleft = processing.loadImage("images/headLeft.jpg")
             }
 
 
@@ -264,11 +264,11 @@
                 processing.fill(255, 0, 0);
                 if (world.gameover == true) {
                     processing.textFont(processing.PFont, 50);
-                    processing.text("GAME OVER", 50, 210);
+                    processing.text("GAME OVER", 250, 210);
                 }
                 if (world.pause == true) {
                     processing.textFont(processing.PFont, 50);
-                    processing.text("PAUSED", 105, 210);
+                    processing.text("PAUSED", 280, 210);
                 }
                 if (world.playing == false) {
                     processing.textFont(processing.PFont, 50);
