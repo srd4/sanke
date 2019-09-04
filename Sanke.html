@@ -47,18 +47,17 @@
         //si el primer objeto es igual a alguno de la lista, termina el juego (la serpiente se comio)
         function ateSelf(world) {
             if (inList(world.snake[0], rest(world.snake))) {
-                make(world, { gameover: true })
-                return world;
+                return true;
             }
+            return false;
         }
 
         //si la cabeza se sale del mapa, termina el juego
         function outTheMap(world) {
-            if ((world.snake[0].x > 10) && (world.snake[0].y > 10)          // cambiar valores segun los del canvas
-                && (world.snake[0].x <= 10) && (world.snake[0].y <= 10)) {
-                make(world, { gameover: true })
-                return world;
+            if ((world.snake[0].x >= 40) || (world.snake[0].y >= 25) || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
+                return true;
             }
+            return false
         }
 
         //if world.pause == true, returns same world over and over (pauses).
@@ -68,13 +67,13 @@
             }
         }
 
-        //retorna true si la posicion de la cabeza es igual a la de la comid
+        //retorna true si la posicion de la cabeza es igual a la de la comida
         function gotFood(world) {
 
-            if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
-                return make(world, { snake: growSnake(world), foodPos: { x: random(), y: random() } })
+            if(world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y){
+                return make(world, {snake: growSnake(world), foodPos: foodSpawn(world)})
             }
-            return world
+            return world;
         }
 
         function growSnake(world) {
@@ -119,6 +118,16 @@
             }
         }
 
+        //esta funcion debe verificar que la comida no aparezca dentro de la serpiente
+        function foodSpawn(world) {
+            //if food's position is same as any square of the snake..
+            const val = {x: random(), y: random()}
+            if(inList(val, world.snake)){
+                return foodSpawn(world)
+            }
+            return val
+        }
+
 
         //funcion principal, no se que hace pero es importante
         function sketchProc(processing) {
@@ -142,9 +151,7 @@
             }
 
 
-
-            //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction:
-
+            //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction: "up"});
             //funcion que recibe teclas como entrada
             processing.onKeyEvent = function (world, keyCode) {
                 switch (keyCode) {
@@ -193,24 +200,21 @@
 
 
 
-            //executes itself in every f
             processing.onTic = function (world) {
-                if (inList(world.snake[0], rest(world.snake))) {
+
+                //If player ate it self or got out of the canvas, gameover is set to true.
+                if (ateSelf(world) || outTheMap(world)) {
                     return make(world, { gameover: true });
                 }
-                if ((world.snake[0].x >= 40) || (world.snake[0].y >= 25)          // cambiar valores segun los del canvas
-                    || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
-                    return make(world, { gameover: true });
-                }
-                if (world.pause == true) {
+
+                //If pause is set to true, returns same world constantly.
+                if (world.pause || world.gameover) {
                     return world
                 }
                 if (!world.playing) {
                     return world
                 }
-                /*ateSelf(world);
-                outTheMap(world);  //estas funciones estan definidas arriba pero al llamarse, no funcionan
-                pause(world);*/
+
                 return gotFood(movement(world));
 
 
@@ -272,7 +276,9 @@
                 }
                 if (world.playing == false) {
                     processing.textFont(processing.PFont, 50);
-                    processing.text("Clic to start", 70, 240);
+
+                    processing.text("CLICK TO START", 240, 240);
+
                 }
                 processing.textFont(processing.PFont, 20);
                 processing.text("SCORE: " + (length(world.snake) - 3), 20, 390);
