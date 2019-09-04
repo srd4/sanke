@@ -20,7 +20,7 @@
 
         //retorna un numero al azar entre 0 y 20
         function random() {
-            return Math.round(Math.random() * 20)
+            return Math.round(Math.random() * 24)
         }
 
         //recibe una lista y retorna una lista igual sin el ultimo valor
@@ -125,7 +125,7 @@
 
             processing.setup = function () {
                 processing.frameRate(15);
-                processing.size(40 * size, 25 * size);
+                processing.size(25 * size, 25 * size);
                 processing.background(0, 0, 0);
                 processing.state = {
                     direction: "right", foodPos: { x: random(), y: random() },
@@ -264,15 +264,15 @@
                 processing.fill(255, 0, 0);
                 if (world.gameover == true) {
                     processing.textFont(processing.PFont, 50);
-                    processing.text("GAME OVER", 250, 210);
+                    processing.text("GAME OVER", 100, 210);
                 }
                 if (world.pause == true) {
                     processing.textFont(processing.PFont, 50);
-                    processing.text("PAUSED", 280, 210);
+                    processing.text("PAUSED", 150, 210);
                 }
                 if (world.playing == false) {
                     processing.textFont(processing.PFont, 50);
-                    processing.text("Clic to start", 240, 240);
+                    processing.text("Clic to start", 70, 240);
                 }
                 processing.textFont(processing.PFont, 20);
                 processing.text("SCORE: " + (length(world.snake) - 3), 20, 390);
