@@ -274,11 +274,25 @@
             processing.keyPressed = function () {
                 processing.state = processing.onKeyEvent(processing.state, processing.keyCode);
             }
+
+            proccessing.changeSkin = function (skin) {
+                switch (skin) {
+                    case 'skin1':
+                        body = processing.loadImage("images/skin1/body.jpg")
+                        headDown = processing.loadImage("images/skin1/headDown.jpg")
+                        headRight = processing.loadImage("images/skin1/headRight.jpg")
+                        headUp = processing.loadImage("images/skin1/headUp.jpg")
+                        headleft = processing.loadImage("images/skin1/headLeft.jpg")
+                }
+            }
         }
         var canvas = document.getElementById("canvas");
 
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
+    <button onClick="processingInstance.changeSkin('skin1')">
+        skin1
+    </button>
 </body>
 
 </html>
