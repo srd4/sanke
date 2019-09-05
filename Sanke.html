@@ -12,7 +12,7 @@
     <script>
         let { append, cons, first, isEmpty, isList, length, rest } = functionalLight;
 
-        const size = 20
+        size = 20
         //crea un objeto nuevo a partir de un objeto y un atributo
         function make(data, attribute) {
             return Object.assign({}, data, attribute);
@@ -78,7 +78,7 @@
 
         function growSnake(world) {
             //adds one square behind the last of the snake.
-            const len = length(world.snake)
+            len = length(world.snake)
             if (world.snake[len - 2].x > world.snake[len - 1].x) {
                 return append(world.snake, { x: world.snake[len - 1].x - 1, y: world.snake[len - 1].y })
             }
@@ -132,11 +132,11 @@
                     pause: false,
                     gameover: false
                 }
-                const body = processing.loadImage("images/snake.jpg")
-                const headDown = processing.loadImage("images/headDown.jpg")
-                const headRight = processing.loadImage("images/headRight.jpg")
-                const headUp = processing.loadImage("images/headUp.jpg")
-                const headleft = processing.loadImage("images/headLeft.jpg")
+                body = processing.loadImage("images/defaultSkin/body.jpg")
+                headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
+                headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
+                headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
+                headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
             }
 
 
