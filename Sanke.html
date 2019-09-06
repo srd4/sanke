@@ -22,6 +22,23 @@
             background-color: #ffffff;
         }
     </style>
+    <style type="text/css">
+        .skinButton {
+            text-decoration: none;
+            padding: 10px;
+            font-weight: 600;
+            font-size: 20px;
+            color: #ffffff;
+            background-color: #ba1818;
+            border-radius: 6px;
+            border: 2px solid #000000;
+        }
+
+        .skinButton:hover {
+            color: #ba1818;
+            background-color: #ffffff;
+        }
+    </style>
 </head>
 
 <body>
@@ -181,28 +198,28 @@
                             return world
                         }
                         else {
-                            return make(world, { direction: "up"});
+                            return make(world, { direction: "up" });
                         }
                     case processing.DOWN:
                         if (world.direction == "up") {
                             return world
                         }
                         else {
-                            return make(world, { direction: "down"});
+                            return make(world, { direction: "down" });
                         }
                     case processing.LEFT:
                         if (world.direction == "right") {
                             return world
                         }
                         else {
-                            return make(world, { direction: "left"});
+                            return make(world, { direction: "left" });
                         }
                     case processing.RIGHT:
                         if (world.direction == "left") {
                             return world
                         }
                         else {
-                            return make(world, { direction: "right"});
+                            return make(world, { direction: "right" });
                         }
                     case 80: //la P es la letra 80
                         if (world.pause == false) {
@@ -271,22 +288,22 @@
                         break;
                 }
             }
-             /**
-            * if world.gameover equals to true returns the game over message
-            * @param {object} world
-            * @returns {undefined}
-            */
+            /**
+           * if world.gameover equals to true returns the game over message
+           * @param {object} world
+           * @returns {undefined}
+           */
             function gameOver(world) {
                 if (world.gameover == true) {
                     processing.textFont(processing.PFont, 50);
                     processing.text("GAME OVER", 50, 210);
                 }
             }
-            function pause(world){
+            function pause(world) {
                 if (world.pause == true) {
                     processing.textFont(processing.PFont, 50);
                     processing.text("PAUSED", 105, 210);
-                }  
+                }
             }
             //funcion que pinta el juego
             processing.drawGame = function (world) {
@@ -362,14 +379,14 @@
             //Executes when key is pressed.
             processing.keyPressed = function () {
 
-                if(processing.state.canPress){
-                    processing.state = processing.onKeyEvent(make(processing.state, {canPress: false}), processing.keyCode);
+                if (processing.state.canPress) {
+                    processing.state = processing.onKeyEvent(make(processing.state, { canPress: false }), processing.keyCode);
                 }
-                }
+            }
 
             //Executes when key is released.
-            processing.keyReleased = function(){ 
-                return make(processing.state,{canPress: true})
+            processing.keyReleased = function () {
+                return make(processing.state, { canPress: true })
 
                 if (processing.state.canPress) {
                     processing.state = processing.onKeyEvent(make(processing.state, { canPress: false }), processing.keyCode);
@@ -387,7 +404,7 @@
                 }
 
             }
-            
+
 
             processing.mouseClicked = function () {
                 processing.state = processing.onMouseEvent(processing.state,
@@ -403,10 +420,9 @@
     <button class="restartButton" onClick="processingInstance.restart()">
         RESTART
 
-    <button onClick="processingInstance.changeSkin('skin1')">
-        skin1
-
-    </button>
+        <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
+            Skin 1
+        </button>
 </body>
 
 </html>
