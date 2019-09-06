@@ -11,8 +11,10 @@
     <script src="web-lib/functional-light.js"></script>
     <script>
         let { append, cons, first, isEmpty, isList, length, rest } = functionalLight;
+
         const size = 20
         const canvasSize = 25
+
         //crea un objeto nuevo a partir de un objeto y un atributo
         function make(data, attribute) {
             return Object.assign({}, data, attribute);
@@ -71,7 +73,7 @@
         }
         function growSnake(world) {
             //adds one square behind the last of the snake.
-            const len = length(world.snake)
+            len = length(world.snake)
             if (world.snake[len - 2].x > world.snake[len - 1].x) {
                 return append(world.snake, { x: world.snake[len - 1].x - 1, y: world.snake[len - 1].y })
             }
@@ -126,7 +128,7 @@
         //funcion principal, no se que hace pero es importante
         function sketchProc(processing) {
             processing.setup = function () {
-                processing.frameRate(20);
+                processing.frameRate(15);
                 processing.size(canvasSize * size, canvasSize * size);
                 processing.background(0, 0, 0);
                 processing.state = {
@@ -138,11 +140,13 @@
                     playing: false,
                     gameover: false
                 }
-                body = processing.loadImage("images/snake.jpg")
-                headDown = processing.loadImage("images/headDown.jpg")
-                headRight = processing.loadImage("images/headRight.jpg")
-                headUp = processing.loadImage("images/headUp.jpg")
-                headleft = processing.loadImage("images/headLeft.jpg")
+
+                body = processing.loadImage("images/defaultSkin/body.jpg")
+                headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
+                headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
+                headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
+                headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
+
             }
 
             //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction: "up"});
@@ -320,15 +324,31 @@
                     processing.state = processing.onKeyEvent(make(processing.state, { canPress: false }), processing.keyCode);
                 }
             }
+
+            processing.changeSkin = function (skin) {
+                switch (skin) {
+                    case 'skin1':
+                        body = processing.loadImage("images/skin1/body.jpg")
+                        headDown = processing.loadImage("images/skin1/headDown.jpg")
+                        headRight = processing.loadImage("images/skin1/headRight.jpg")
+                        headUp = processing.loadImage("images/skin1/headUp.jpg")
+                        headleft = processing.loadImage("images/skin1/headLeft.jpg")
+                }
+            }
+
             processing.mouseClicked = function () {
                 processing.state = processing.onMouseEvent(processing.state,
                     { action: "click" });
             }
 
+
         }
         var canvas = document.getElementById("canvas");
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
+    <button onClick="processingInstance.changeSkin('skin1')">
+        skin1
+    </button>
 </body>
 
 </html>
