@@ -189,7 +189,6 @@
 
             }
 
-            //make(world, {snake: growSnake(world), foodPos: { x: random(), y: random() }, direction: "up"});
             //funcion que recibe teclas como entrada
             processing.onKeyEvent = function (world, keyCode) {
                 switch (keyCode) {
@@ -221,9 +220,9 @@
                         else {
                             return make(world, { direction: "right" });
                         }
-                    case 80: //la P es la letra 80
+                    case 80: //P is letter 80
                         if (world.pause == false) {
-                            return make(world, { pause: true })
+                            return make(world, { pause: true, canPress: true })
                             break;
                         }
                         else {
@@ -245,10 +244,12 @@
                     return make(world, { gameover: true });
                 }
                 //If pause is set to true, returns same world constantly.
-                if (world.pause || world.gameover || !world.playing) {
+                if (world.gameover || !world.playing) {
                     return world
                 }
-
+                if (world.pause) {
+                    return make(world, { canPress: true })
+                }
 
                 return make(gotFood(movement(world)), { canPress: true });
 
@@ -314,7 +315,6 @@
                 drawSnakeBody(rest(world.snake))
                 drawSnakeHead(world)
                 processing.fill(255, 0, 0);
-
                 gameOver(world);
                 pause(world);
                 if (world.playing == false) {
@@ -330,9 +330,9 @@
                 processing.state = processing.onTic(processing.state);
             };
             /**
-            * Re asing the initial world to processing.state
-             * @returns {object}
-             * */
+            * Assing the initial values of the world to processing.state in order to restart the game
+            * @returns {object}
+            * */
             processing.restart = function () {
                 processing.state = {
                     direction: "right",
@@ -346,28 +346,11 @@
             }
 
             /**
-            * Re asing the initial world to processing.state
-             * @returns {object}
-             * */
-            processing.restart = function () {
-                processing.state = {
-                    direction: "right",
-                    canPress: true,
-                    foodPos: { x: random(), y: random() },
-                    snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
-                    pause: false,
-                    playing: false,
-                    gameover: false
-                }
-            }
-
-            /**
-
             * Changes the playing state from false to true if event.action is 'click'
-            @param {object} world
-            @param {object} event
-            @returns {object}
-            @example make(world, { playing: true })
+            * @param {object} world
+            * @param {object} event
+            * @returns {object}
+            * @example make(world, { playing: true })
             */
             processing.onMouseEvent = function (world, event) {
                 if (event.action === 'click') {
@@ -393,6 +376,11 @@
                 }
             }
 
+            /**
+            * Changes the skins variables to the respective skin selected
+            * @param {string} skin
+            * @returns {object}
+            */
             processing.changeSkin = function (skin) {
                 switch (skin) {
                     case 'skin1':
@@ -401,6 +389,14 @@
                         headRight = processing.loadImage("images/skin1/headRight.jpg")
                         headUp = processing.loadImage("images/skin1/headUp.jpg")
                         headleft = processing.loadImage("images/skin1/headLeft.jpg")
+                        break;
+                    case 'defaultSkin':
+                        body = processing.loadImage("images/defaultSkin/body.jpg")
+                        headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
+                        headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
+                        headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
+                        headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
+                        break;
                 }
 
             }
@@ -419,10 +415,14 @@
     <br>
     <button class="restartButton" onClick="processingInstance.restart()">
         RESTART
-
-        <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
-            Skin 1
-        </button>
+    </button>
+    <button class="skinButton" onClick="processingInstance.changeSkin('defaultSkin')">
+        Default Skin
+    </button>
+    <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
+        Skin 1
+    </button>
+    
 </body>
 
 </html>
