@@ -343,6 +343,10 @@
             //Draws the game.
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
+                //guia
+                processing.fill(0, 0, 0,1)
+                processing.rect(2*size,2*size,(canvas-2)*size,(canvas-2)*size)
+                //guia
                 processing.fill(0, 255, 0)
                 processing.rect(world.foodPos.x * 20, world.foodPos.y * 20, 20, 20)
                 processing.fill(200, 200, 200);
