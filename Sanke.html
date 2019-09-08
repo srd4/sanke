@@ -50,16 +50,16 @@
     <script src="web-lib/snake-functions.js"></script>
     <script>
         let { append, cons, first, isEmpty, isList, length, rest } = functionalLight;
-        let { make, random, listMinOne, inList, ateSelf, outTheMap, pause, gotFood, growSnake, movement,foodSpawn } = require('snake-functions');
+        let { make, random, listMinOne, inList, ateSelf, outTheMap, pause, gotFood, growSnake, movement, foodSpawn } = require('snake-functions');
 
         const size = 20
         const canvasSize = 24
         const easy = 6
         const medium = easy * 2
         const hard = easy * 3
-        
+
         const firstWorld = {
-            
+
             direction: "right",
             canPress: true,
             frameRate: medium,
@@ -69,7 +69,7 @@
             score: 0,
             playing: false,
             gameover: false,
-           
+
         }
 
         function sketchProc(processing) {
@@ -79,7 +79,7 @@
             headUp = processing.loadImage("images/defaultSkin/headUp.png")
             headleft = processing.loadImage("images/defaultSkin/headLeft.png")
             wallpaper = processing.loadImage("images/defaultSkin/wallpaper.png")
-
+            font = processing.createFont("Impact")
             //First world's settings.
 
             processing.setup = function () {
@@ -154,7 +154,7 @@
                 //If is game is not playing.
                 if (!world.playing) {
                     return world;
-                    
+
                 }
 
                 return make(gotFood(movement(world)), { canPress: true });
@@ -206,23 +206,23 @@
            * @param {object} world
            * @returns {undefined}
            */
-           let localStorageName = "sankeHighScore";
-           var highScore ;
-           
+            let localStorageName = "sankeHighScore";
+            var highScore;
+
             function gameOverMs(world) {
                 if (world.gameover == true) {
-                   //this operator set the highscore in the local storage, that way
-                   //the highscore is saved even when you restart your computer
-               localStorage.setItem(localStorageName, Math.max(world.score, highScore));
-                     
-             
+                    //this operator set the highscore in the local storage, that way
+                    //the highscore is saved even when you restart your computer
+                    localStorage.setItem(localStorageName, Math.max(world.score, highScore));
+
+
                     processing.textFont(processing.PFont, 50);
                     processing.text("GAME OVER", 50, 210);
-                
-              
+
+
                 }
             }
-           
+
             //Pause message.
             function pauseMs(world) {
                 if (world.pause == true && !world.gameover) {
@@ -232,13 +232,13 @@
             }
             //Click message.
             function clickMs(world) {
-                
+
                 if (!world.playing) {
                     //this operator checks if there is a previous highscore, in whichs case will print it,
-           // and otherwise will set it to zero, and it must be placed in the start screen
+                    // and otherwise will set it to zero, and it must be placed in the start screen
                     highScore = localStorage.getItem(localStorageName) == null ? 0 :
-                     localStorage.getItem(localStorageName);
-                     
+                        localStorage.getItem(localStorageName);
+
                     processing.textFont(processing.PFont, 50);
                     processing.text("CLICK TO START", canvasSize, (canvasSize * 20) / 2);
                 }
@@ -246,24 +246,21 @@
 
             //Score message.
             function scoreMs(world) {
-                processing.textFont(processing.PFont, 20);
-                processing.text("SCORE: " + world.score, 20, 390);
+                processing.textFont(font, 45);
+                processing.text(world.score, 150, 544);
             };
-            
-          
-    
 
-              //this function prints the highscore
-              
-               function highScoreMs() {
-                processing.textFont(processing.PFont, 20);
-                processing.text("HIGHSCORE: " + highScore, 20, 420);}
-           
-    
+            //this function prints the highscore
+
+            function highScoreMs() {
+                processing.text(highScore, 410, 544);
+            }
+
+
             //Draws the game.
             processing.drawGame = function (world) {
-        
-     
+
+
                 processing.background(100, 100, 250);
                 processing.image(wallpaper, 0, 0)
                 processing.fill(0, 255, 0)
@@ -271,19 +268,12 @@
                 processing.fill(200, 200, 200);
                 drawSnakeBody(rest(world.snake))
                 drawSnakeHead(world)
-                processing.fill(255, 0, 0);
-              
-
-
+                processing.fill(255, 255, 255);
                 gameOverMs(world);
                 pauseMs(world);
                 clickMs(world);
                 scoreMs(world);
                 highScoreMs();
-         
-
-                
-               
             };
 
 
