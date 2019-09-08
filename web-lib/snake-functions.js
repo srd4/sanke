@@ -137,7 +137,7 @@ function make(data, attribute) {
 //Returns random number between 0 and canvasSize-1.
 function random() {
 
-    return Math.round(Math.random() * (canvasSize - 1))
+    return Math.round(Math.random() * (canvasSize - 5)) + 2
 
 }
 
@@ -172,7 +172,7 @@ function ateSelf(world) {
 
 //Checks if head of the snake is out of the map.
 function outTheMap(world) {
-    if ((world.snake[0].x >= canvasSize) || (world.snake[0].y >= canvasSize) || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
+    if ((world.snake[0].x >= (canvasSize - 2)) || (world.snake[0].y >= (canvasSize - 2)) || (world.snake[0].x < 2) || (world.snake[0].y < 2)) {
         return true;
     }
     return false
