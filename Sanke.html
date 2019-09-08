@@ -76,7 +76,7 @@
         //Returns random number between 0 and canvasSize-1.
         function random() {
 
-            return Math.round(Math.random() * (canvasSize - 4)) + 2
+            return Math.round(Math.random() * (canvasSize - 5)) + 2
 
         }
 
@@ -192,7 +192,7 @@
 
             //First world's settings.
             processing.setup = function () {
-                processing.size(canvasSize * size, canvasSize * size + 2 * size);
+                processing.size(canvasSize * size, canvasSize * size + 4 * size);
                 processing.background(0, 0, 0);
                 processing.state = firstWorld
 
@@ -337,7 +337,7 @@
             //Score message.
             function scoreLabel(world) {
                 processing.textFont(processing.PFont, 30);
-                processing.text("SCORE: " + world.score, 20, 500);
+                processing.text("SCORE: " + world.score, 20, 540);
             };
 
 
@@ -345,10 +345,6 @@
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
                 processing.image(wallpaper, 0, 0)
-                //guia
-                processing.fill(0, 0, 0, 1)
-                processing.rect(2 * size, 2 * size, (canvasSize - 4) * size, (canvasSize - 6) * size)
-                //guia
                 processing.fill(0, 255, 0)
                 processing.rect(world.foodPos.x * 20, world.foodPos.y * 20, 20, 20)
                 processing.fill(200, 200, 200);
@@ -406,6 +402,13 @@
                         headUp = processing.loadImage("images/skin1/headUp.png")
                         headleft = processing.loadImage("images/skin1/headLeft.png")
                         break;
+                    case 'skin2':
+                        body = processing.loadImage("images/skin2/body.png")
+                        headDown = processing.loadImage("images/skin2/headDown.png")
+                        headRight = processing.loadImage("images/skin2/headRight.png")
+                        headUp = processing.loadImage("images/skin2/headUp.png")
+                        headleft = processing.loadImage("images/skin2/headLeft.png")
+                        break;
                     case 'defaultSkin':
                         body = processing.loadImage("images/defaultSkin/body.png")
                         headDown = processing.loadImage("images/defaultSkin/headDown.png")
@@ -434,7 +437,6 @@
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
 
-    <br>
     <button class="restartButton" onClick="processingInstance.restart()">
         RESTART
     </button>
@@ -453,6 +455,9 @@
     </button>
     <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
         Skin 1
+    </button>
+    <button class="skinButton" onClick="processingInstance.changeSkin('skin2')">
+        Skin 2
     </button>
 </body>
 
