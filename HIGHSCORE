@@ -47,13 +47,11 @@
     <canvas id="canvas" width="300" height="300"></canvas>
     <script src="web-lib/processing.js"></script>
     <script src="web-lib/functional-light.js"></script>
-    <script src="web-lib/snake-functions.js"></script>
     <script>
         let { append, cons, first, isEmpty, isList, length, rest } = functionalLight;
-        let { make, random, listMinOne, inList, ateSelf, outTheMap, pause, gotFood, growSnake, movement,foodSpawn } = require('snake-functions');
 
         const size = 20
-        const canvasSize = 24
+        const canvasSize = 25
         const easy = 6
         const medium = easy * 2
         const hard = easy * 3
@@ -64,7 +62,7 @@
             canPress: true,
             frameRate: medium,
             foodPos: { x: random(), y: random() },
-            snake: [{ x: 4, y: 2 }, { x: 3, y: 2 }, { x: 2, y: 2 }],
+            snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
             pause: false,
             score: 0,
             playing: false,
@@ -72,18 +70,134 @@
            
         }
 
+        //Creates a new object based on another object and modifying/adding given attributes.
+        function make(data, attribute) {
+            return Object.assign({}, data, attribute);
+        }
+        
+        //Returns random number between 0 and canvasSize-1.
+        function random() {
+
+            return Math.round(Math.random() * (canvasSize - 1))
+
+        }
+        
+    
+        //Returns list without the last element.
+        function listMinOne(list) {
+            if (length(list) == 1) {
+                return [];
+            }
+            else {
+                return cons(first(list), listMinOne(rest(list)));
+            }
+        }
+        
+        //Returns true if a "square" object is inside list.
+        function inList(element, list) {
+            if (isEmpty(list)) {
+                return false
+            }
+            if (element.x == first(list).x && element.y == first(list).y) {
+                return true
+            }
+            return inList(element, rest(list))
+        }
+        
+        //Checks if head's position equals any of the body.
+        function ateSelf(world) {
+            if (inList(world.snake[0], rest(world.snake))) {
+                return true;
+            }
+            return false;
+        }
+        
+        //Checks if head of the snake is out of the map.
+        function outTheMap(world) {
+            if ((world.snake[0].x >= canvasSize) || (world.snake[0].y >= canvasSize) || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
+                return true;
+            }
+            return false
+        }
+        //if world.pause equals true, returns unchaged world.
+        function pause(world) {
+            if (world.pause == true) {
+                return world
+            }
+        }
+
+        function gotFood(world) {
+            if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
+                return make(world, { snake: growSnake(world), foodPos: foodSpawn(world), score: world.score + 1 })
+            }
+            return world;
+        }
+
+        //Adds one square to total length of the snake.
+        function growSnake(world) {
+            len = length(world.snake)
+            if (world.snake[len - 2].x > world.snake[len - 1].x) {
+                return append(world.snake, { x: world.snake[len - 1].x - 1, y: world.snake[len - 1].y })
+            }
+            if (world.snake[len - 2].x < world.snake[len - 1].x) {
+                return append(world.snake, { x: world.snake[len - 1].x + 1, y: world.snake[len - 1].y })
+            }
+            if (world.snake[len - 2].y < world.snake[len - 1].y) {
+                return append(world.snake, { y: world.snake[len - 1].y + 1, x: world.snake[len - 1].x })
+            }
+            if (world.snake[len - 2].y > world.snake[len - 1].y) {
+                return append(world.snake, { y: world.snake[len - 1].y - 1, x: world.snake[len - 1].x })
+            }
+        }
+
+        //Moves the snake by deleting last square and adding one infront.
+        function movement(world) {
+            switch (world.direction) {
+                case "up":
+                    return make(world,
+                        { snake: cons(make(world.snake[0], { y: world.snake[0].y - 1 }), listMinOne(world.snake)) });
+                    break;
+                case "down":
+                    return make(world,
+                        { snake: cons(make(world.snake[0], { y: world.snake[0].y + 1 }), listMinOne(world.snake)) });
+                    break;
+                case "left":
+                    return make(world, {
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x - 1 }), listMinOne(world.snake))
+                    });
+                    break;
+                case "right":
+                    return make(world, {
+                        snake: cons(make(world.snake[0], { x: world.snake[0].x + 1 }), listMinOne(world.snake))
+                    });
+                    break;
+                default:
+                    return make(world, {});
+            }
+        }
+        
+        //Makes sure food doesn´t spawn under the snake.
+        function foodSpawn(world) {
+            const val = { x: random(), y: random() }
+            if (inList(val, world.snake)) {
+                return foodSpawn(world)
+            }
+            return val
+        }
+
         function sketchProc(processing) {
-            body = processing.loadImage("images/defaultSkin/body.png")
-            headDown = processing.loadImage("images/defaultSkin/headDown.png")
-            headRight = processing.loadImage("images/defaultSkin/headRight.png")
-            headUp = processing.loadImage("images/defaultSkin/headUp.png")
-            headleft = processing.loadImage("images/defaultSkin/headLeft.png")
-            wallpaper = processing.loadImage("images/defaultSkin/wallpaper.png")
+            body = processing.loadImage("images/defaultSkin/body.jpg")
+            headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
+            headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
+            headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
+            headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
 
             //First world's settings.
 
             processing.setup = function () {
-                processing.size(canvasSize * size, canvasSize * size + 4 * size);
+               
+        
+                processing.size(canvasSize * size, canvasSize * size);
                 processing.background(0, 0, 0);
                 processing.state = firstWorld
 
@@ -138,14 +252,14 @@
 
             //Executes itself once every frame
             processing.onTic = function (world) {
-
+                
                 processing.frameRate(world.frameRate)
 
                 //If player ate it self or got out of the canvas, gameover is set to true.
                 if (ateSelf(movement(world)) || outTheMap(movement(world))) {
                     return make(world, { gameover: true, canPress: false });
                 }
-
+              
                 //If pause or gameover is set to true, returns same world constantly.
                 if (world.pause || world.gameover) {
                     return world
@@ -225,7 +339,7 @@
            
             //Pause message.
             function pauseMs(world) {
-                if (world.pause == true && !world.gameover) {
+                if (world.pause == true) {
                     processing.textFont(processing.PFont, 50);
                     processing.text("PAUSED", 105, 210);
                 }
@@ -265,7 +379,6 @@
         
      
                 processing.background(100, 100, 250);
-                processing.image(wallpaper, 0, 0)
                 processing.fill(0, 255, 0)
                 processing.rect(world.foodPos.x * 20, world.foodPos.y * 20, 20, 20)
                 processing.fill(200, 200, 200);
@@ -312,11 +425,8 @@
 
             //Executes when key is pressed.
             processing.keyPressed = function () {
-                if ((processing.state.canPress && processing.state.playing) || processing.keyCode == 80) {
+                if (processing.state.canPress || processing.keyCode == 80) {
                     processing.state = processing.onKeyEvent(make(processing.state, { canPress: false }), processing.keyCode);
-                }
-                else {
-                    return 0
                 }
             }
 
@@ -324,25 +434,18 @@
             processing.changeSkin = function (skin) {
                 switch (skin) {
                     case 'skin1':
-                        body = processing.loadImage("images/skin1/body.png")
-                        headDown = processing.loadImage("images/skin1/headDown.png")
-                        headRight = processing.loadImage("images/skin1/headRight.png")
-                        headUp = processing.loadImage("images/skin1/headUp.png")
-                        headleft = processing.loadImage("images/skin1/headLeft.png")
-                        break;
-                    case 'skin2':
-                        body = processing.loadImage("images/skin2/body.png")
-                        headDown = processing.loadImage("images/skin2/headDown.png")
-                        headRight = processing.loadImage("images/skin2/headRight.png")
-                        headUp = processing.loadImage("images/skin2/headUp.png")
-                        headleft = processing.loadImage("images/skin2/headLeft.png")
+                        body = processing.loadImage("images/skin1/body.jpg")
+                        headDown = processing.loadImage("images/skin1/headDown.jpg")
+                        headRight = processing.loadImage("images/skin1/headRight.jpg")
+                        headUp = processing.loadImage("images/skin1/headUp.jpg")
+                        headleft = processing.loadImage("images/skin1/headLeft.jpg")
                         break;
                     case 'defaultSkin':
-                        body = processing.loadImage("images/defaultSkin/body.png")
-                        headDown = processing.loadImage("images/defaultSkin/headDown.png")
-                        headRight = processing.loadImage("images/defaultSkin/headRight.png")
-                        headUp = processing.loadImage("images/defaultSkin/headUp.png")
-                        headleft = processing.loadImage("images/defaultSkin/headLeft.png")
+                        body = processing.loadImage("images/defaultSkin/body.jpg")
+                        headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
+                        headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
+                        headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
+                        headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
                         break;
                 }
             }
@@ -359,12 +462,12 @@
                 processing.state = make(processing.state, { playing: true });
             }
 
-
         }
         var canvas = document.getElementById("canvas");
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
 
+    <br>
     <button class="restartButton" onClick="processingInstance.restart()">
         RESTART
     </button>
@@ -376,15 +479,11 @@
     </button>
     <button class="restartButton" onClick="processingInstance.changeFrameRate(hard)">
         HARD
-    </button>
     <button class="skinButton" onClick="processingInstance.changeSkin('defaultSkin')">
         Default Skin
     </button>
     <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
         Skin 1
-    </button>
-    <button class="skinButton" onClick="processingInstance.changeSkin('skin2')">
-        Skin 2
     </button>
 </body>
 
