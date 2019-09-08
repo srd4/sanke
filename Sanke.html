@@ -61,7 +61,7 @@
             canPress: true,
             frameRate: medium,
             foodPos: { x: random(), y: random() },
-            snake: [{ x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }],
+            snake: [{ x: 4, y: 2 }, { x: 3, y: 2 }, { x: 2, y: 2 }],
             pause: false,
             score: 0,
             playing: false,
@@ -76,7 +76,7 @@
         //Returns random number between 0 and canvasSize-1.
         function random() {
 
-            return Math.round(Math.random() * (canvasSize - 1))
+            return Math.round(Math.random() * (canvasSize - 4)) + 2
 
         }
 
@@ -111,7 +111,7 @@
 
         //Checks if head of the snake is out of the map.
         function outTheMap(world) {
-            if ((world.snake[0].x >= canvasSize) || (world.snake[0].y >= canvasSize) || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
+            if ((world.snake[0].x >= (canvasSize - 2)) || (world.snake[0].y >= (canvasSize - 2)) || (world.snake[0].x < 2) || (world.snake[0].y < 2)) {
                 return true;
             }
             return false
@@ -183,11 +183,12 @@
         }
 
         function sketchProc(processing) {
-            body = processing.loadImage("images/defaultSkin/body.jpg")
-            headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
-            headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
-            headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
-            headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
+            body = processing.loadImage("images/defaultSkin/body.png")
+            headDown = processing.loadImage("images/defaultSkin/headDown.png")
+            headRight = processing.loadImage("images/defaultSkin/headRight.png")
+            headUp = processing.loadImage("images/defaultSkin/headUp.png")
+            headleft = processing.loadImage("images/defaultSkin/headLeft.png")
+            wallpaper = processing.loadImage("images/defaultSkin/wallpaper.png")
 
             //First world's settings.
             processing.setup = function () {
@@ -328,24 +329,25 @@
             //Click message.
             function clickMs(world) {
                 if (!world.playing) {
-                    processing.textFont(processing.PFont, 50);
-                    processing.text("CLICK TO START", canvasSize, (canvasSize * 20) / 2);
+                    processing.textFont(processing.PFont, 40);
+                    processing.text("CLICK TO START", canvasSize + 60, (canvasSize * 20) / 2);
                 }
             };
 
             //Score message.
             function scoreLabel(world) {
-                processing.textFont(processing.PFont, 20);
-                processing.text("SCORE: " + world.score, 20, 390);
+                processing.textFont(processing.PFont, 30);
+                processing.text("SCORE: " + world.score, 20, 500);
             };
 
 
             //Draws the game.
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
+                processing.image(wallpaper, 0, 0)
                 //guia
                 processing.fill(0, 0, 0, 1)
-                processing.rect(2 * size, 2 * size, (canvasSize - 4) * size, (canvasSize - 4) * size)
+                processing.rect(2 * size, 2 * size, (canvasSize - 4) * size, (canvasSize - 6) * size)
                 //guia
                 processing.fill(0, 255, 0)
                 processing.rect(world.foodPos.x * 20, world.foodPos.y * 20, 20, 20)
@@ -398,18 +400,18 @@
             processing.changeSkin = function (skin) {
                 switch (skin) {
                     case 'skin1':
-                        body = processing.loadImage("images/skin1/body.jpg")
-                        headDown = processing.loadImage("images/skin1/headDown.jpg")
-                        headRight = processing.loadImage("images/skin1/headRight.jpg")
-                        headUp = processing.loadImage("images/skin1/headUp.jpg")
-                        headleft = processing.loadImage("images/skin1/headLeft.jpg")
+                        body = processing.loadImage("images/skin1/body.png")
+                        headDown = processing.loadImage("images/skin1/headDown.png")
+                        headRight = processing.loadImage("images/skin1/headRight.png")
+                        headUp = processing.loadImage("images/skin1/headUp.png")
+                        headleft = processing.loadImage("images/skin1/headLeft.png")
                         break;
                     case 'defaultSkin':
-                        body = processing.loadImage("images/defaultSkin/body.jpg")
-                        headDown = processing.loadImage("images/defaultSkin/headDown.jpg")
-                        headRight = processing.loadImage("images/defaultSkin/headRight.jpg")
-                        headUp = processing.loadImage("images/defaultSkin/headUp.jpg")
-                        headleft = processing.loadImage("images/defaultSkin/headLeft.jpg")
+                        body = processing.loadImage("images/defaultSkin/body.png")
+                        headDown = processing.loadImage("images/defaultSkin/headDown.png")
+                        headRight = processing.loadImage("images/defaultSkin/headRight.png")
+                        headUp = processing.loadImage("images/defaultSkin/headUp.png")
+                        headleft = processing.loadImage("images/defaultSkin/headLeft.png")
                         break;
                 }
             }
