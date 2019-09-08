@@ -89,7 +89,7 @@
                 return cons(first(list), listMinOne(rest(list)));
             }
         }
-        
+
         //Returns true if a "square" object is inside list.
         function inList(element, list) {
             if (isEmpty(list)) {
@@ -100,7 +100,7 @@
             }
             return inList(element, rest(list))
         }
-        
+
         //Checks if head's position equals any of the body.
         function ateSelf(world) {
             if (inList(world.snake[0], rest(world.snake))) {
@@ -108,7 +108,7 @@
             }
             return false;
         }
-        
+
         //Checks if head of the snake is out of the map.
         function outTheMap(world) {
             if ((world.snake[0].x >= canvasSize) || (world.snake[0].y >= canvasSize) || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
@@ -172,7 +172,7 @@
                     return world;
             }
         }
-        
+
         //Makes sure food doesn´t spawn under the snake.
         function foodSpawn(world) {
             const val = { x: random(), y: random() }
@@ -191,7 +191,7 @@
 
             //First world's settings.
             processing.setup = function () {
-                processing.size(canvasSize * size, canvasSize * size);
+                processing.size(canvasSize * size, canvasSize * size + 2 * size);
                 processing.background(0, 0, 0);
                 processing.state = firstWorld
 
@@ -246,14 +246,14 @@
 
             //Executes itself once every frame
             processing.onTic = function (world) {
-                
+
                 processing.frameRate(world.frameRate)
 
                 //If player ate it self or got out of the canvas, gameover is set to true.
                 if (ateSelf(movement(world)) || outTheMap(movement(world))) {
                     return make(world, { gameover: true, canPress: false });
                 }
-              
+
                 //If pause or gameover is set to true, returns same world constantly.
                 if (world.pause || world.gameover) {
                     return world
@@ -344,8 +344,8 @@
             processing.drawGame = function (world) {
                 processing.background(100, 100, 250);
                 //guia
-                processing.fill(0, 0, 0,1)
-                processing.rect(2*size,2*size,(canvas-2)*size,(canvas-2)*size)
+                processing.fill(0, 0, 0, 1)
+                processing.rect(2 * size, 2 * size, (canvasSize - 4) * size, (canvasSize - 4) * size)
                 //guia
                 processing.fill(0, 255, 0)
                 processing.rect(world.foodPos.x * 20, world.foodPos.y * 20, 20, 20)
@@ -389,7 +389,7 @@
                 if ((processing.state.canPress && processing.state.playing) || processing.keyCode == 80) {
                     processing.state = processing.onKeyEvent(make(processing.state, { canPress: false }), processing.keyCode);
                 }
-                else{
+                else {
                     return 0
                 }
             };
