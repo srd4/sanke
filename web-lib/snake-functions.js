@@ -129,19 +129,35 @@ module.exports = { cons, first, rest, isEmpty, isList, length, append, filter, m
 
 const { cons, first, rest, isEmpty, isList, append, length, map } = require('functional-light');
 
-//Creates a new object based on another object and modifying/adding given attributes.
+ /**
+  * Creates a new object based on another object and modifying/adding given attributes.
+  * @returns {object}
+  * @param {object} data
+  * @param attribute
+  * @example make(world, { direction: "up" });
+  */
 function make(data, attribute) {
     return Object.assign({}, data, attribute);
 }
 
-//Returns random number between 0 and canvasSize-1.
+/**
+ * Returns random number between 0 and canvasSize-1.
+ * @returns {number}
+ * @param {none}
+ * @example y: random()
+ */
 function random() {
 
     return Math.round(Math.random() * (canvasSize - 1))
 
 }
 
-//Returns list without the last element.
+/**
+ * Returns list without the last element.
+ * @returns {list}
+ * @param {list} list
+ * @example listMinOne(world.snake)
+ */      
 function listMinOne(list) {
     if (length(list) == 1) {
         return [];
@@ -151,8 +167,14 @@ function listMinOne(list) {
     }
 }
 
-//Returns true if a "square" object is inside list.
-function inList(element, list) {
+/**
+ * Returns true if a "square" object is inside list.
+ * @returns {boolean}
+ * @param {object} element
+ * @param {list} list
+ * @example inList(world.snake[0], rest(world.snake)
+ */   
+ function inList(element, list) {
     if (isEmpty(list)) {
         return false
     }
@@ -162,7 +184,12 @@ function inList(element, list) {
     return inList(element, rest(list))
 }
 
-//Checks if head's position equals any of the body.
+ /**
+ * Checks if head's position equals any of the body.
+ * @returns {boolean}
+ * @param {object} world
+ * @example (ateSelf(movement(world)
+ */
 function ateSelf(world) {
     if (inList(world.snake[0], rest(world.snake))) {
         return true;
@@ -170,20 +197,35 @@ function ateSelf(world) {
     return false;
 }
 
-//Checks if head of the snake is out of the map.
+/**
+ * Checks if head of the snake is out of the map.
+ * @returns {boolean}
+ * @param {object} world
+ * @example outTheMap(movement(world)
+ */           
 function outTheMap(world) {
     if ((world.snake[0].x >= canvasSize) || (world.snake[0].y >= canvasSize) || (world.snake[0].x < 0) || (world.snake[0].y < 0)) {
         return true;
     }
     return false
 }
-//if world.pause equals true, returns unchaged world.
+/**
+ * if world.pause equals true, returns unchaged world.
+ * @returns {boolean}
+ * @param {object} world 
+ * @example pause(world)
+ */       
 function pause(world) {
     if (world.pause == true) {
         return world
     }
 }
-
+/**
+ * If the position of the snake's head is equal to the position of the food the snake grows.
+ * @returns {object} 
+ * @param {object} world
+ * @example gotFood(movement(world)
+ */
 function gotFood(world) {
     if (world.snake[0].x == world.foodPos.x && world.snake[0].y == world.foodPos.y) {
         return make(world, { snake: growSnake(world), foodPos: foodSpawn(world), score: world.score + 1 })
@@ -191,7 +233,12 @@ function gotFood(world) {
     return world;
 }
 
-//Adds one square to total length of the snake.
+/**
+ * Adds one square to total length of the snake.
+ * @returns {list}
+ * @param {object} world
+ * @example growSnake(world)
+ */ 
 function growSnake(world) {
     len = length(world.snake)
     if (world.snake[len - 2].x > world.snake[len - 1].x) {
@@ -208,7 +255,12 @@ function growSnake(world) {
     }
 }
 
-//Moves the snake by deleting last square and adding one infront.
+/**
+ * Moves the snake by deleting last square and adding one infront.
+ * @returns {list}
+ * @param {object} world
+ * @example movement(world)
+ */
 function movement(world) {
     switch (world.direction) {
         case "up":
@@ -234,7 +286,12 @@ function movement(world) {
     }
 }
 
-//Makes sure food doesn´t spawn under the snake.
+/**
+ * Makes sure food doesn't spawn under the snake.
+ * @returns {const}
+ * @param {object} world
+ * @example foodSpawn(world)
+ */ 
 function foodSpawn(world) {
     const val = { x: random(), y: random() }
     if (inList(val, world.snake)) {
