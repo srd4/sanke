@@ -323,19 +323,26 @@
                 processing.drawGame(processing.state);
             };
             /**
-            *Sets current world to initial world.
+             *Sets current world to initial world.
              * @returns {object}
              * */
             processing.restart = function () {
                 processing.state = firstWorld;
             }
-            //Changes world.framerate.
+            /**
+             *Sets current world to initial world.
+             * @param {number} frames
+             * @returns {object}
+             * */
             processing.changeFrameRate = function (frames) {
                 if (!processing.state.playing) {
                     processing.state = make(processing.state, { frameRate: frames });
                 }
             }
-            //Executes when key is pressed.
+            /**
+             *Executes when key is pressed.
+             * @returns {object}
+             * */
             processing.keyPressed = function () {
                 if ((processing.state.canPress && processing.state.playing) || processing.keyCode == 80) {
                     processing.state = processing.onKeyEvent(make(processing.state, { canPress: false }), processing.keyCode);
@@ -420,7 +427,7 @@
                 processing.state = make(processing.state, { playing: true });
             }
         }
-        
+
         var canvas = document.getElementById("canvas");
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
