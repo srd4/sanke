@@ -8,6 +8,16 @@
 
     <!-- Style for the restart button -->
     <style type="text/css">
+        .canvas{
+            padding-right: 10px;
+            float:left;
+        }
+
+        .menuButtons button{
+            width: 140px;
+            margin: 2px;
+            display: block;
+        }
         .restartButton {
             text-decoration: none;
             padding: 10px;
@@ -22,8 +32,6 @@
             color: #1883ba;
             background-color: #ffffff;
         }
-    </style>
-    <style type="text/css">
         .skinButton {
             text-decoration: none;
             padding: 10px;
@@ -42,7 +50,40 @@
 </head>
 
 <body>
-    <canvas id="canvas" width="300" height="300"></canvas>
+    <div>
+        <div class="canvas"><canvas id="canvas" width="300" height="300"></canvas></div>
+
+        <div class="menuButtons">
+    
+                <button class="restartButton" onClick="processingInstance.restart()">
+                    RESTART</button>
+                <button class="restartButton" onClick="processingInstance.changeFrameRate(easy)">
+                    EASY
+                </button>
+                <button class="restartButton" onClick="processingInstance.changeFrameRate(medium)">
+                    MEDIUM
+                </button>
+                <button class="restartButton" onClick="processingInstance.changeFrameRate(hard)">
+                    HARD
+                </button>
+                <button class="skinButton" onClick="processingInstance.changeSkin('defaultSkin')">
+                    Default Skin
+                </button>
+                <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
+                    Skin 1
+                </button>
+                <button class="skinButton" onClick="processingInstance.changeSkin('skin2')">
+                    Skin 2
+                </button>
+                <button class="skinButton" onClick="processingInstance.changeSkin('skin3')">
+                    Skin 3
+                </button>
+                <button class="skinButton" onClick="processingInstance.changeSkin('skin4')">
+                    Classic Snake
+                </button>
+            </div>
+    
+    </div>
     <script src="web-lib/processing.js"></script>
     <script src="web-lib/functional-light.js"></script>
     <script src="web-lib/snake-functions.js"></script>
@@ -54,6 +95,9 @@
         const easy = 6
         const medium = easy * 2
         const hard = easy * 3
+
+        let localStorageName = "sankeHighScore";
+        var highScore;
 
         const firstWorld = {
 
@@ -155,11 +199,11 @@
 
                 //If pause or gameover is set to true, returns same world constantly.
                 if (world.pause || world.gameover) {
-                    return world
+                    return make(world, {canPress:false});
                 }
                 //If is game is not playing.
                 if (!world.playing) {
-                    return world;
+                    return make(world, {canPress:false});
 
                 }
                 return make(gotFood(movement(world)), { canPress: true });
@@ -199,14 +243,12 @@
                         break;
                 }
             }
+
             /**
            * If world.gameover equals true draws game over message.
            * @param {object} world
            * @returns {undefined}
            */
-            let localStorageName = "sankeHighScore";
-            var highScore;
-
             function gameOverMs(world) {
                 if (world.gameover == true) {
                     //this operator set the highscore in the local storage, that way
@@ -382,34 +424,7 @@
         var canvas = document.getElementById("canvas");
         var processingInstance = new Processing(canvas, sketchProc);
     </script>
-
-    <button class="restartButton" onClick="processingInstance.restart()">
-        RESTART
-    </button>
-    <button class="restartButton" onClick="processingInstance.changeFrameRate(easy)">
-        EASY
-    </button>
-    <button class="restartButton" onClick="processingInstance.changeFrameRate(medium)">
-        MEDIUM
-    </button>
-    <button class="restartButton" onClick="processingInstance.changeFrameRate(hard)">
-        HARD
-    </button>
-    <button class="skinButton" onClick="processingInstance.changeSkin('defaultSkin')">
-        Default Skin
-    </button>
-    <button class="skinButton" onClick="processingInstance.changeSkin('skin1')">
-        Skin 1
-    </button>
-    <button class="skinButton" onClick="processingInstance.changeSkin('skin2')">
-        Skin 2
-    </button>
-    <button class="skinButton" onClick="processingInstance.changeSkin('skin3')">
-        Skin 3
-    </button>
-    <button class="skinButton" onClick="processingInstance.changeSkin('skin4')">
-        Classic Snake
-    </button>
+    
 </body>
 
 </html>
