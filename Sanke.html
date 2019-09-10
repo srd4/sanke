@@ -8,16 +8,17 @@
 
     <!-- Style for the restart button -->
     <style type="text/css">
-        .canvas{
+        .canvas {
             padding-right: 10px;
-            float:left;
+            float: left;
         }
 
-        .menuButtons button{
+        .menuButtons button {
             width: 140px;
             margin: 2px;
             display: block;
         }
+
         .restartButton {
             text-decoration: none;
             padding: 10px;
@@ -211,7 +212,7 @@
 
                             //If pause or gameover is set to true, returns same world constantly.
                             if (world.pause || world.gameover) {
-                                return make(world, {canPress: false})
+                                return make(world, { canPress: false })
                             }
                             //If is game is not playing.
                             if (!world.playing) {
